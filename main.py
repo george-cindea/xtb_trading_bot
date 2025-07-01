@@ -175,11 +175,11 @@ def update_spreadsheet(ticker, current_price, dividend_price, state):
 			colvals = sheet.col_values(2)
 			if ticker in colvals:
 				count = colvals.index(ticker) + 1
-				price_cell = f"F{count}"
+				price_cell = f"G{count}"
 				sheet.update_acell(price_cell, current_price)
 				print(f"Price {current_price} updated for {ticker} in spreadsheet")
 				if state["first_time_run"] == 1 or dividend_price is not None:
-					div_cell = f"G{count}"
+					div_cell = f"H{count}"
 					sheet.update_acell(div_cell, dividend_price)
 					print(f"Dividend {dividend_price} updated for {ticker} in spreadsheet")
 		except Exception as e: # pylint: disable=broad-except
