@@ -11,7 +11,7 @@ import telegram_send
 import gspread
 from google.oauth2.service_account import Credentials
 import yfinance as yf
-from XTB_API.API import XTB # pylint: disable=import-error, no-name-in-module
+from XTB_API.xtb_api import XTB # pylint: disable=import-error, no-name-in-module
 #The line above will be changed once the lib will be pushed to pip
 
 # Getting credentials from config.ini file
@@ -46,8 +46,9 @@ def get_tickers():
 	config.read('config.ini')
 	user = config.get('XTB', 'XTB_user')
 	password = config.get('XTB', 'XTB_pass')
-	xtb_connect = XTB(user, password)
-	ticker_list_local = xtb_connect.get_AllSymbols()
+	xtb_connection = XTB(user, password)
+	xtb_connection.start()
+	ticker_list_local = xtb_connection.market.get_all_symbols()
 	ticker_list_local = [
 		tickerdicts["symbol"].split(".")[0]
 		for tickerdicts in ticker_list_local["returnData"]
@@ -59,7 +60,7 @@ def get_tickers():
 		and "CFD" not in tickerdicts["description"]
 	]
 	ticker_list_local = sorted(ticker_list_local)
-	xtb_connect.logout()
+	xtb_connection.stop()
 	print("XTB login and logout. Got all tickers for US market")
 	return ticker_list_local
 
